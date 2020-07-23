@@ -148,15 +148,15 @@ class FileMetadata(object):
     self.ready = False
     def parse():
       self.thumbnail_fn = None
-      thumbnail_fn = tempfile.mkstemp(suffix='.jpg', prefix='gnomecast_pid%i_thumbnail_' % os.getpid())[1]
-      os.remove(thumbnail_fn)
+      ##thumbnail_fn = tempfile.mkstemp(suffix='.jpg', prefix='gnomecast_pid%i_thumbnail_' % os.getpid())[1]
+      ##os.remove(thumbnail_fn)
       self._ffmpeg_output = _ffmpeg_output if _ffmpeg_output else subprocess.check_output(
-        ['ffmpeg', '-i', fn, '-f', 'ffmetadata', '-', '-f', 'mjpeg', '-vframes', '1', '-ss', '27', '-vf', 'scale=600:-1', thumbnail_fn],
+        ['ffprobe', '-i', fn,],
         stderr=subprocess.STDOUT
       ).decode()
       _important_ffmpeg = []
-      if os.path.isfile(thumbnail_fn):
-        self.thumbnail_fn = thumbnail_fn
+      ##if os.path.isfile(thumbnail_fn):
+      ##  self.thumbnail_fn = thumbnail_fn
       output = self._ffmpeg_output.split('\n')
       self.container = fn.lower().split(".")[-1]
       self.video_streams = []
@@ -612,9 +612,9 @@ class Gnomecast(object):
     vbox_outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
 
-    self.thumbnail_image = Gtk.Image()
-    self.thumbnail_image.set_from_pixbuf(self.get_logo_pixbuf())
-    vbox_outer.pack_start(self.thumbnail_image, True, False, 0)
+    ##self.thumbnail_image = Gtk.Image()
+    ##self.thumbnail_image.set_from_pixbuf(self.get_logo_pixbuf())
+    ##vbox_outer.pack_start(self.thumbnail_image, True, False, 0)
     alignment = Gtk.Alignment(xscale=1, yscale=1)
     alignment.add(vbox)
     alignment.set_padding(16, 20, 16, 16)
@@ -814,9 +814,9 @@ class Gnomecast(object):
     self.fn = fn
     self.transcoder = model[row][7]
     self.duration = model[row][2]
-    thumbnail_fn = model[row][4]
-    if thumbnail_fn and os.path.isfile(thumbnail_fn):
-      self.thumbnail_image.set_from_file(thumbnail_fn)
+    ##thumbnail_fn = model[row][4]
+    ##if thumbnail_fn and os.path.isfile(thumbnail_fn):
+    ##  self.thumbnail_image.set_from_file(thumbnail_fn)
     if self.cast:
       self.cast.media_controller.stop()
     def f():
@@ -844,14 +844,14 @@ class Gnomecast(object):
         display = display[:MAX_LEN-10] + '...' + display[-10:]
       def callback(fmd):
         print(fmd)
-        if os.path.isfile(fmd.thumbnail_fn):
-          for row in self.files_store:
-            if row[1]==fmd.fn:
-              row[4] = fmd.thumbnail_fn
+        ##if os.path.isfile(fmd.thumbnail_fn):
+        ##  for row in self.files_store:
+        ##    if row[1]==fmd.fn:
+        ##      row[4] = fmd.thumbnail_fn
         def f():
-          if self.fn == fmd.fn and fmd.thumbnail_fn:
-            self.thumbnail_image.set_from_file(fmd.thumbnail_fn)
-            self.win.resize(1,1)
+          ##if self.fn == fmd.fn and fmd.thumbnail_fn:
+          ##  self.thumbnail_image.set_from_file(fmd.thumbnail_fn)
+          ##  self.win.resize(1,1)
           self.update_status()
         GLib.idle_add(f)
       fmd = FileMetadata(fn, callback)
@@ -911,9 +911,9 @@ class Gnomecast(object):
       transcoder = row[7]
       if transcoder:
         transcoder.destroy()
-      thumbnail_fn = row[4]
-      if thumbnail_fn and os.path.isfile(thumbnail_fn):
-        os.remove(thumbnail_fn)
+      ##thumbnail_fn = row[4]
+      ##if thumbnail_fn and os.path.isfile(thumbnail_fn):
+      ##  os.remove(thumbnail_fn)
     self.restore_screensaver()
     Gtk.main_quit()
 
@@ -1072,7 +1072,7 @@ class Gnomecast(object):
     self.subtitle_combo.set_active(pos)
 
   def unselect_file(self):
-    self.thumbnail_image.set_from_pixbuf(self.get_logo_pixbuf())
+    ##self.thumbnail_image.set_from_pixbuf(self.get_logo_pixbuf())
     self.fn = None
     self.stream_store.clear()
     self.subtitle_store.clear()
@@ -1100,7 +1100,7 @@ class Gnomecast(object):
       GLib.idle_add(f)
       return
     fn = os.path.abspath(fn)
-    self.thumbnail_image.set_from_pixbuf(self.get_logo_pixbuf())
+    ##self.thumbnail_image.set_from_pixbuf(self.get_logo_pixbuf())
     self.fn = fn
     self.stream_store.clear()
     self.subtitle_store.clear()
@@ -1109,11 +1109,11 @@ class Gnomecast(object):
     def f():
       self.scrubber_adj.set_value(0)
       for row in self.files_store:
-        thumbnail_fn = row[4]
+      ##  thumbnail_fn = row[4]
         if self.fn == row[1]:
-          if thumbnail_fn:
-            self.thumbnail_image.set_from_file(thumbnail_fn)
-            self.win.resize(1,1)
+      ##    if thumbnail_fn:
+      ##      self.thumbnail_image.set_from_file(thumbnail_fn)
+      ##      self.win.resize(1,1)
           row[6] = 'video-x-generic'
           self.duration = row[2]
         else:
