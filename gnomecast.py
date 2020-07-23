@@ -968,9 +968,9 @@ class Gnomecast(object):
            Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
       dialog.set_select_multiple(True)
 
-      downloads_dir = os.path.expanduser('~/Downloads')
-      if os.path.isdir(downloads_dir):
-        dialog.set_current_folder(downloads_dir)
+      videos_dir = os.path.expanduser('~/Videos')
+      if os.path.isdir(videos_dir):
+        dialog.set_current_folder(videos_dir)
 
       filter_py = Gtk.FileFilter()
       filter_py.set_name("Videos")
