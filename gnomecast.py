@@ -61,6 +61,7 @@ HARDWARE = {
   ('Unknown manufacturer','Chromecast Ultra'): Device(h265=True, ac3=True),
   ('Unknown manufacturer','Google Home Mini'): Device(h265=False, ac3=False),
   ('Unknown manufacturer','Google Home'): Device(h265=False, ac3=False),
+  ("Google Inc.", "Chromecast"): Device(h265=False, ac3=False),
   ('VIZIO','P75-F1'): Device(h265=True, ac3=True),
 }
 
@@ -271,7 +272,7 @@ class Transcoder(object):
     print('Transcoder', fn)
     transcode_container = fmd.container not in ('mp4', 'aac', 'mp3', 'wav')
     self.transcode_video = force_video or not self.can_play_video_codec(video_stream.codec)
-    self.transcode_audio = force_audio or fmd.container not in AUDIO_EXTS or not self.can_play_audio_stream(self.audio_stream)
+    self.transcode_audio = force_audio or fmd.container not in (AUDIO_EXTS, "mp4") or not self.can_play_audio_stream(self.audio_stream)
     self.transcode = transcode_container or self.transcode_video or self.transcode_audio
     self.trans_fn = None
 
