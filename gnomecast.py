@@ -617,11 +617,12 @@ class Gnomecast(object):
     ##vbox_outer.pack_start(self.thumbnail_image, True, False, 0)
     alignment = Gtk.Alignment(xscale=1, yscale=1)
     alignment.add(vbox)
-    alignment.set_padding(16, 20, 16, 16)
+    ##alignment.set_padding(16, 20, 16, 16)
     vbox_outer.pack_start(alignment, False, False, 0)
 
     hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     vbox.pack_start(hbox, False, False, 0)
+    vbox.set_border_width(16)
     self.cast_combo = cast_combo = Gtk.ComboBox.new_with_model(cast_store)
     cast_combo.set_entry_text_column(1)
     renderer_text = Gtk.CellRendererText()
